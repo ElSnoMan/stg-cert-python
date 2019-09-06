@@ -1,7 +1,6 @@
 from typing import List
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
@@ -20,6 +19,9 @@ class ResultsPage:
 
         :param count: 20 | 50 | 100
         """
+        if count != 20 or 50 or 100:
+            raise Exception(f'count must be 20, 50 or 100 but was {count}')
+
         Select(self.map.show_entries_dropdown).select_by_value(str(count))
         self.wait_for_new_results_load()
 
