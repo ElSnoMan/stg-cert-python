@@ -14,6 +14,15 @@ def copart():
 
 
 @pytest.fixture
+def royale():
+    driver = webdriver.Chrome()
+    driver.get('https://statsroyale.com')
+    pages = Pages(driver)
+    yield pages
+    driver.quit()
+
+
+@pytest.fixture
 def driver():
     driver = webdriver.Chrome()
     yield driver

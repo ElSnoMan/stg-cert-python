@@ -1,20 +1,5 @@
 import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
-
-from royale.pages.pages import Pages
 from royale.services import card_service
-
-
-@pytest.fixture
-def royale():
-    driver = webdriver.Chrome()
-    driver.get('https://statsroyale.com')
-    pages = Pages(driver)
-    yield pages
-    driver.quit()
 
 
 api_cards = card_service.get_all_cards()
