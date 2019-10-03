@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 pytest = "*"
 selenium = "*"
+pydantic = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

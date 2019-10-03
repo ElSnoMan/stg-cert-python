@@ -1,11 +1,14 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class CardsPage:
     def __init__(self, driver: WebDriver):
         self.map = CardsPageMap(driver)
+        self._driver = driver
 
     def goto(self):
         self.map.cards_link().click()

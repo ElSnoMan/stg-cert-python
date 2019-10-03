@@ -1,7 +1,11 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
 from royale.pages.pages import Pages
+from royale.services import card_service
 
 
 @pytest.fixture
@@ -13,37 +17,25 @@ def royale():
     driver.quit()
 
 
-card_names = ['Ice Spirit', 'Mirror', 'Lava Hound']
+api_cards = card_service.get_all_cards()
 
 
-@pytest.mark.parametrize('card_name', card_names)
-def test_card_is_displayed(royale, card_name):
+@pytest.mark.parametrize('api_card', api_cards)
+def test_card_is_displayed(royale, api_card):
     royale.cards.goto()
-    card = royale.cards.get_card_by_name(card_name)
+    card = royale.cards.get_card_by_name(api_card.name)
     assert card.is_displayed
 
 
-def test_ice_spirit_details_are_correct(royale):
-    # 1. go to statsroyale
-    # 2. open cards page
-    # 3. go to Ice Spirit's Details Page
-    # 4 assert name, type, arena, and rarity are correct
+@pytest.mark.parametrize('api_card', api_cards)
+def test_card_details_are_correct(royale, api_card):
+    royale.cards.goto()
+    royale.cards.get_card_by_name(api_card.name).click()
 
-    cards_link = royale.find_element(By.CSS_SELECTOR, "a[href='/cards']")
-    cards_link.click()
+    royale.card_details.wait_for_page_load()
+    card = royale.card_details.get_base_card()
 
-    ice_spirit = royale.find_element(By.CSS_SELECTOR, "a[href*='Ice+Spirit']")
-    ice_spirit.click()
-
-    card_name = royale.find_element(By.CSS_SELECTOR, "[class*='cardName']").text
-    # text in element is "Troop, Arena 8"
-    card_deets = royale.find_element(By.CSS_SELECTOR, "[class='card__rarity']").text.split(', ')
-    # after splitting we get ["Troop", "Arena 8"] so we can assign type and arena
-    card_type = card_deets[0]
-    card_arena = card_deets[1]
-    card_rarity = royale.find_element(By.CSS_SELECTOR, "[class*='card__count']").text
-
-    assert card_name == 'Ice Spirit'
-    assert card_type == 'Troop'
-    assert card_arena == 'Arena 8'
-    assert card_rarity == 'Common'
+    assert card.name == api_card.name
+    assert card.type == api_card.type
+    assert card.arena == api_card.arena
+    assert card.rarity == api_card.rarity
