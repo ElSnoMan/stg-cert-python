@@ -6,11 +6,14 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from copart.pages.filter_options_menu import FilterMenu
+
 
 class ResultsPage:
     def __init__(self, driver):
         self._driver = driver
         self.map = ResultsPageMap(driver)
+        self.filter_menu = FilterMenu(driver)
 
     def change_num_of_entries_shown(self, count: int):
         """ Changes the number of entries/results shown in the table.
@@ -23,6 +26,10 @@ class ResultsPage:
             raise Exception(f'count must be 20, 50 or 100 but was {count}')
 
         Select(self.map.show_entries_dropdown).select_by_value(str(count))
+        self.wait_for_new_results_load()
+
+    def filter_by(self, filter_name: str, search: str):
+        self.filter_menu.filter_by(filter_name, search)
         self.wait_for_new_results_load()
 
     def wait_for_page_load(self):

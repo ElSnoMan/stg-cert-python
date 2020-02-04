@@ -5,8 +5,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 
-from younique.models.cart_summary import CartSummary
-from younique.models.item_row import ItemRow
+from younique.models.cart import CartSummary, ItemRow
 
 
 class CartPage:

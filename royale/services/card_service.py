@@ -11,4 +11,14 @@ def get_all_cards() -> List[Card]:
     if response.status_code != 200:
         raise Exception(f'/cards responded with: {response.status_code}')
 
-    return [Card(**card) for card in response.json()]
+    cards = [Card(**card) for card in response.json()]
+
+    for card in cards:
+        if 'spell' in card.type:
+            card.type = 'Spell'
+        elif 'building' in card.type:
+            card.type = 'Building'
+        else:
+            card.type = 'Troop'
+
+    return cards
