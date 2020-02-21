@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 
 from copart.pages.pages import Pages
 from younique.pages.pages import YouniquePages
@@ -36,3 +37,11 @@ def driver():
     driver = webdriver.Chrome()
     yield driver
     driver.quit()
+
+
+@pytest.fixture
+def hover(driver):
+    def _hover(element):
+        action = ActionChains(driver)
+        action.move_to_element(element).perform()
+    return _hover
