@@ -1,5 +1,6 @@
 from typing import List
 
+
 # 1. Create a class representation of Tepig
 
 
@@ -33,8 +34,6 @@ class Attack:
 
 
 # 3. Write a simple program to simulate one Pokemon attacking another Pokemon
-
-
 # attacks
 ember = Attack(name='Ember', cost='FC', damage=30, effect='Discard an Energy attached to this Pokémon.')
 thunder_shock = Attack(name='Thunder Shock', cost='EE', damage=40, effect=None)
@@ -44,9 +43,7 @@ water_gun = Attack('Water Gun', cost='W', damage=20, effect=None)
 squirtle = Pokemon('Squirtle', 'Basic', 70, 'Water', attacks=[water_gun], weakness='Electric')
 pikachu = Pokemon('Pikachu', 'Basic', 70, 'Electric', [thunder_shock], weakness='Fighting')
 
+# battle
 print(squirtle.hp)
 pikachu.attack('Thunder Shock', squirtle)
 print(squirtle.hp)
-
-
-# 4. How would you handle if a Pokemon's attack is super effective?
