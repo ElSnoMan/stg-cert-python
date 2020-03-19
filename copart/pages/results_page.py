@@ -1,19 +1,16 @@
-from typing import List
-
+from pylenium import Pylenium
+from pylenium.element import Element, Elements
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from copart.pages.filter_options_menu import FilterMenu
 
 
 class ResultsPage:
-    def __init__(self, driver):
-        self._driver = driver
-        self.map = ResultsPageMap(driver)
-        self.filter_menu = FilterMenu(driver)
+    def __init__(self, py: Pylenium):
+        self.py = py
+        self.map = ResultsPageMap(py)
+        self.filter_menu = FilterMenu(py)
 
     def change_num_of_entries_shown(self, count: int):
         """ Changes the number of entries/results shown in the table.
@@ -25,7 +22,7 @@ class ResultsPage:
         if count != 20 or 50 or 100:
             raise Exception(f'count must be 20, 50 or 100 but was {count}')
 
-        Select(self.map.show_entries_dropdown).select_by_value(str(count))
+        self.map.show_entries_dropdown.select(str(count))
         self.wait_for_new_results_load()
 
     def filter_by(self, filter_name: str, search: str):
@@ -33,31 +30,29 @@ class ResultsPage:
         self.wait_for_new_results_load()
 
     def wait_for_page_load(self):
-        WebDriverWait(self._driver, 10).until(
-            EC.visibility_of_element_located((By.TAG_NAME, 'tbody')))
+        self.py.wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'tbody')))
 
     def wait_for_new_results_load(self):
-        wait = WebDriverWait(self._driver, 30)
-        wait.until(lambda _: self.map.table_spinner.get_attribute('style') == 'display: block;')
-        wait.until(lambda _: self.map.table_spinner.get_attribute('style') == 'display: none;')
+        self.py.wait.until(lambda _: self.map.table_spinner.get_attribute('style') == 'display: block;')
+        self.py.wait.until(lambda _: self.map.table_spinner.get_attribute('style') == 'display: none;')
 
 
 class ResultsPageMap:
-    def __init__(self, driver):
-        self._driver = driver
+    def __init__(self, py: Pylenium):
+        self._py = py
 
     @property
-    def show_entries_dropdown(self) -> WebElement:
-        return self._driver.find_element(By.CSS_SELECTOR, 'select[name="serverSideDataTable_length"]')
+    def show_entries_dropdown(self) -> Element:
+        return self._py.get('select[name="serverSideDataTable_length"]')
 
     @property
-    def table_spinner(self) -> WebElement:
-        return self._driver.find_element(By.ID, 'serverSideDataTable_processing')
+    def table_spinner(self) -> Element:
+        return self._py.get('#serverSideDataTable_processing')
 
     @property
-    def model_results(self) -> List[WebElement]:
-        return self._driver.find_elements(By.XPATH, "//span[@data-uname='lotsearchLotmodel']")
+    def model_results(self) -> Elements:
+        return self._py.xpath("//span[@data-uname='lotsearchLotmodel']")
 
     @property
-    def damage_results(self) -> List[WebElement]:
-        return self._driver.find_elements(By.XPATH, "//span[@data-uname='lotsearchLotdamagedescription']")
+    def damage_results(self) -> Elements:
+        return self._py.xpath("//span[@data-uname='lotsearchLotdamagedescription']")

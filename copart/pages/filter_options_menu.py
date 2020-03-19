@@ -1,10 +1,10 @@
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
+from pylenium import Pylenium
+from pylenium.element import Element
 
 
 class FilterMenu:
-    def __init__(self, driver):
-        self._driver = driver
+    def __init__(self, py: Pylenium):
+        self._py = py
 
     def filter_by(self, filter_name: str, search: str):
         """ Filter the table results using the Filter Options menu.
@@ -12,7 +12,7 @@ class FilterMenu:
         :param filter_name: Examples: 'Model' | 'Body Style'
         :param search: The search term to use. The first option after the search is selected.
         """
-        filter = FilterComponent(self._driver, filter_name)
+        filter = FilterComponent(self._py, filter_name)
         if filter.is_collapsed:
             filter.toggle.click()
 
@@ -21,20 +21,19 @@ class FilterMenu:
 
 
 class FilterComponent:
-    def __init__(self, driver, name):
-        self._driver = driver
+    def __init__(self, py: Pylenium, name):
+        self._py = py
         self.name = name
 
     @property
-    def current(self) -> WebElement:
+    def current(self) -> Element:
         """ The Parent element that holds the elements of this current Filter. """
-        return self._driver.find_element(
-            By.XPATH, f"//a[@data-uname='{self.name}Filter']/ancestor::li")
+        return self._py.xpath(f"//a[@data-uname='{self.name}Filter']/ancestor::li")
 
     @property
-    def toggle(self) -> WebElement:
+    def toggle(self) -> Element:
         """ The Toggle element to open or collapse the Filter. """
-        return self.current.find_element(By.CSS_SELECTOR, "a[data-toggle='collapse']")
+        return self.current.get("a[data-toggle='collapse']")
 
     @property
     def is_collapsed(self) -> bool:
@@ -43,15 +42,15 @@ class FilterComponent:
         return True if collapsed is None or 'false' else False
 
     @property
-    def clear_button(self) -> WebElement:
+    def clear_button(self) -> Element:
         """ The Clear button that resets the current filter and refreshes the table. """
-        return self.current.find_element(By.CSS_SELECTOR, "[data-uname='watchlistClear']")
+        return self.current.get("[data-uname='watchlistClear']")
 
     @property
-    def search_field(self) -> WebElement:
+    def search_field(self) -> Element:
         """ The Input element to enter a query. """
-        return self.current.find_element(By.CSS_SELECTOR, 'input[placeholder="Search"]')
+        return self.current.get('input[placeholder="Search"]')
 
-    def option(self, name: str) -> WebElement:
+    def option(self, name: str) -> Element:
         """ Gets a single Filter Option checkbox by its name/value. """
-        return self.current.find_element(By.CSS_SELECTOR, f"input[type='checkbox'][value='{name}']")
+        return self.current.get(f"input[type='checkbox'][value='{name}']")

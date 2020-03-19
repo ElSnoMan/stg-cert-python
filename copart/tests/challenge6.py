@@ -14,5 +14,5 @@ def test_challenge_6(copart):
 
     # 3. If the query doesn't exist, catch the exception and take a screenshot
     except BaseException as error:
-        copart.driver.save_screenshot('test_fail.png')
+        copart.py.save_screenshot('test_fail.png')
         raise error

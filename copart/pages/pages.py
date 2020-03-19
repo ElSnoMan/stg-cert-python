@@ -1,14 +1,13 @@
-from selenium.webdriver.remote.webdriver import WebDriver
-
+from pylenium import Pylenium
 from copart.pages.home_page import HomePage
 from copart.pages.results_page import ResultsPage
 
 
-class Pages:
-    def __init__(self, driver: WebDriver):
-        self.driver = driver
-        self.home = HomePage(driver)
-        self.results = ResultsPage(driver)
+class CopartPages:
+    def __init__(self, py: Pylenium):
+        self.py = py
+        self.home = HomePage(py)
+        self.results = ResultsPage(py)
 
     def search(self, query: str) -> ResultsPage:
         self.home.search(query)

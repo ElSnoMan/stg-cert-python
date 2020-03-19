@@ -1,20 +1,21 @@
-from selenium.webdriver.common.by import By
+from pylenium import Pylenium
+from pylenium.element import Element
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webelement import WebElement
 
 
 class HomePage:
-    def __init__(self, driver):
-        self.map = HomePageMap(driver)
+    def __init__(self, py: Pylenium):
+        self.py = py
+        self.map = HomePageMap(py)
 
     def search(self, search_term: str):
-        self.map.search_field.send_keys(search_term + Keys.ENTER)
+        self.map.search_field.type(search_term + Keys.ENTER)
 
 
 class HomePageMap:
-    def __init__(self, driver):
-        self._driver = driver
+    def __init__(self, py: Pylenium):
+        self._py = py
 
     @property
-    def search_field(self) -> WebElement:
-        return self._driver.find_element(By.ID, 'input-search')
+    def search_field(self) -> Element:
+        return self._py.get('#input-search')

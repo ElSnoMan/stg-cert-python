@@ -11,6 +11,7 @@ pytest = "*"
 selenium = "*"
 pydantic = "*"
 requests = "*"
+pyleniumio = "*"
 
 [requires]
 python_version = "3.7"
